@@ -1,0 +1,40 @@
+on:
+  push:
+    branches: [main]
+    
+name: Get Github Release Data
+jobs:
+  latest-version:
+    name: Get Latest Release
+    runs-on: ubuntu-latest
+    environment: dev   #For Environment
+    steps:
+      - uses: actions/checkout@master
+      - name: Get Latest Release
+        id: latest_version
+        uses: abatilo/release-info-action@v1.3.0
+        with:
+          owner: prashant-demo110
+          repo: release_management_poc
+      - name: Example of consumption of the output
+        run: |
+          owner="prashant-demo110"
+          repo="release_management_poc"
+          release_json=$(curl https://api.github.com/repos/$owner/$repo/releases)
+          Release_tag=$(echo "$release_json" | jq -r '.[0].tag_name')
+          Release_name=$(echo "$release_json" | jq -r '.[0].name')
+          Body=$(echo "$release_json" | jq -r '.[0].body')
+          Released_date=$(echo "$release_json" | jq -r '.[0].published_at')
+          Commit_branch_name=$(echo "$release_json" | jq -r '.[0].target_commitish')
+          
+          echo "Release_tag: Latest Tag is : $Release_tag"
+          echo "Release_name: Latest Release Tag Name is : $Release_name"
+          echo "Body: Latest Release Tag Body is : $Body"
+          echo "Released_date: Timings are : $Released_date"
+          echo "Commit_branch_name: Branch triggered : $Commit_branch_name"
+
+          echo ::set-output name=Release_tag::"$Release_tag"
+          echo ::set-output name=Release_name::"$Release_name"
+          echo ::set-output name=Body::"$Body"
+          echo ::set-output name=Released_date::"$Released_date"
+          echo ::set-output name=Commit_branch_name::"$Commit_branch_name"
