@@ -1,6 +1,6 @@
 on:
   push:
-    branches: [main]
+    branches: [feat/HP-5]
     
 name: Get Github Release Data
 jobs:
@@ -14,12 +14,12 @@ jobs:
         id: latest_version
         uses: abatilo/release-info-action@v1.3.0
         with:
-          owner: prashant-demo110
-          repo: release_management_poc
+          owner: pulkitSamrat
+          repo: hello-world
       - name: Example of consumption of the output
         run: |
-          owner="prashant-demo110"
-          repo="release_management_poc"
+          owner="pulkitSamrat"
+          repo="hello-world"
           release_json=$(curl https://api.github.com/repos/$owner/$repo/releases)
           Release_tag=$(echo "$release_json" | jq -r '.[0].tag_name')
           Release_name=$(echo "$release_json" | jq -r '.[0].name')
